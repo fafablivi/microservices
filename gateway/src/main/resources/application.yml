@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: gateway
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    gateway:
+      routes:
+        - id: student-service
+          uri: lb://student
+          predicates:
+            - Path=/student/**
+        - id: school-service
+          uri: lb://school
+          predicates:
+            - Path=/school/**
+        - id: auth-service
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
+server:
+  port: "8084"
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8761/eureka/"
+    register-with-eureka: true
+    fetch-registry: true
